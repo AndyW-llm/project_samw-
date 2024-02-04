@@ -6,8 +6,6 @@ from prompt_toolkit.shortcuts import message_dialog
 from prompt_toolkit import prompt
 from operate.exceptions import ModelNotRecognizedException
 import platform
-
-# from operate.models.prompts import USER_QUESTION, get_system_prompt
 from operate.models.prompts import (
     USER_QUESTION,
     get_system_prompt,
@@ -103,12 +101,14 @@ def main(model, terminal_prompt, voice_mode=False):
 
     session_id = None
 
+    cmd_s_mode = model in ["llama_index"]
+
     while True:
         if VERBOSE:
             print("[Self Operating Computer] loop_count", loop_count)
         try:
             operations, session_id = asyncio.run(
-                get_next_action(model, messages, objective, session_id)
+                get_next_action(model, messages, objective, session_id, cmd_s_mode)
             )
 
             stop = operate(operations)

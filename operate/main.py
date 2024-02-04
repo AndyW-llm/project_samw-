@@ -15,7 +15,8 @@ def main_entry():
         "--model",
         help="Specify the model to use",
         required=False,
-        default="gpt-4-with-ocr",
+        # default="gpt-4-with-ocr",
+        default="llama_index",
     )
 
     # Add a voice flag

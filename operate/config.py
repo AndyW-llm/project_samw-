@@ -82,8 +82,22 @@ class Config:
             model == "gpt-4"
             or voice_mode
             or model == "gpt-4-with-som"
-            or model == "gpt-4-with-ocr",
+            or model == "gpt-4-with-ocr"
+            or model == "llama_index",
         )
+
+        self.require_api_key(
+            "KNOWLEDGE_PATH",
+            "Knowledge Path",
+            model == "llama_index"
+        )
+
+        self.require_api_key(
+            "INDEX_PATH",
+            "Index Path",
+            model == "llama_index"
+        )
+
         self.require_api_key(
             "GOOGLE_API_KEY", "Google API key", model == "gemini-pro-vision"
         )

@@ -28,16 +28,19 @@ from operate.utils.label import (
     get_click_position_in_percent,
     get_label_coordinates,
 )
+
 from operate.utils.style import ANSI_GREEN, ANSI_RED, ANSI_RESET, ANSI_BRIGHT_MAGENTA
 import pkg_resources
 
+from pynput import keyboard
+from operate.utils.text_util import copy_text_from_current_window
 
 # Load configuration
 config = Config()
 VERBOSE = config.verbose
 
 
-async def get_next_action(model, messages, objective, session_id):
+async def get_next_action(model, messages, objective, session_id, cmd_s_mode=False):
     if VERBOSE:
         print("[Self-Operating Computer][get_next_action]")
         print("[Self-Operating Computer][get_next_action] model", model)
@@ -49,12 +52,46 @@ async def get_next_action(model, messages, objective, session_id):
     if model == "gpt-4-with-ocr":
         operation = await call_gpt_4_vision_preview_ocr(messages, objective, model)
         return operation, None
+    elif model == "llama_index":
+        assert cmd_s_mode
+        await _keyboard_listener()
+        # operation = await call_gpt_4_vision_preview_ocr(messages, objective, model)
+        return None, None
     elif model == "agent-1":
         return "coming soon"
     elif model == "gemini-pro-vision":
         return call_gemini_pro_vision(messages, objective), None
 
     raise ModelNotRecognizedException(model)
+
+
+def _keyboard_listener():
+    global current_keys
+    current_keys = set()
+    with keyboard.Listener(on_press=_keyboard_listener_on_press, on_release=_keyboard_listener__on_release) as listener:
+        listener.join()
+        pass
+
+
+def _keyboard_listener_on_press(key):
+    global current_keys
+    if key == keyboard.Key.cmd or key == keyboard.KeyCode(char='1'):
+        current_keys.add(key)
+
+        # Check if both keys are pressed (not necessarily held down together)
+        if keyboard.Key.cmd in current_keys and keyboard.KeyCode(char='1') in current_keys:
+            # single_loop()
+            text = copy_text_from_current_window()
+            print("[Self-Operating Computer][get_next_action] copied from selection:\n", text)
+            return False  # Stop listener
+
+
+def _keyboard_listener__on_release(key):
+    global current_keys
+    try:
+        current_keys.remove(key)
+    except KeyError:
+        pass
 
 
 def call_gpt_4_vision_preview(messages):
