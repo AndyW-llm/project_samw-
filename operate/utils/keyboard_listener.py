@@ -26,7 +26,7 @@ class KeyboardListener:
 
 # Example usage
 if __name__ == "__main__":
-    hotkey='<cmd>+`'
+    hotkey='<cmd>+1'
     print(f"KeyboardListener:\n  press {hotkey} to activate.\n  press <ctrl>+c to quit.")
     while True:
         print("-"*25)
