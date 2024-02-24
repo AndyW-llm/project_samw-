@@ -1,5 +1,8 @@
 # project_samw-
 unused/
+streamlit/chatgpt_app.py
+streamlit/pdf_QA_app.py
+/streamlit/tmp/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
