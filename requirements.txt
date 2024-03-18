@@ -5,6 +5,7 @@ rich
 streamlit
 keyboard
 rank-bm25
+transformers
 annotated-types==0.6.0
 anyio==3.7.1
 certifi==2023.7.22
